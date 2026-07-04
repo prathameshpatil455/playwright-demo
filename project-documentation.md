@@ -209,8 +209,11 @@ npx playwright test tests/alerts.spec.ts --debug --project=chromium
 Opens a graphical test explorer where users can select tests, watch the browser execute actions, and inspect each step in a timeline — the recommended interface for interactive demos.
 
 ```bash
-npm run test:ui
+npm run test:ui      # All tests
+npm run demo:ui      # 10 highlight @demo tests only
 ```
+
+For live academic presentations, **`npm run demo`** (headed, slow-mo, sequential) is the primary recommended command — see Chapter 3, Section 3.4 and Chapter 8, Section 8.3.
 
 ### Trace Viewer
 
@@ -402,14 +405,62 @@ The following scripts are defined in `package.json` for convenient execution:
 
 | Script | Command | Purpose |
 |--------|---------|---------|
+| `npm run demo` | `playwright test --config=playwright.demo.config.ts` | **Live presentation** — 10 highlight tests, headed, slow-mo |
+| `npm run demo:ui` | Same config with `--ui` | Same 10 tests in Playwright UI Mode |
 | `npm test` | `playwright test` | Run all tests across all projects |
 | `npm run test:chromium` | `--project=chromium` | Single-browser run (fastest) |
 | `npm run test:firefox` | `--project=firefox` | Firefox-only run |
 | `npm run test:webkit` | `--project=webkit` | WebKit-only run |
 | `npm run test:mobile` | `--project=mobile-chrome` | Mobile emulation run |
-| `npm run test:ui` | `--ui` | Interactive UI mode for demos |
+| `npm run test:ui` | `--ui` | Interactive UI mode (all tests) |
 | `npm run test:headed` | `--headed` | Visible browser during execution |
 | `npm run test:trace` | `--trace on` | Record trace on every run |
+
+### Live Demo Configuration (`npm run demo`)
+
+For academic presentations and viva examinations, the project includes a dedicated demo configuration file — **`playwright.demo.config.ts`** — invoked via a single command:
+
+```bash
+npm run demo
+```
+
+This command is the **recommended primary method** for live demonstration, replacing long manual CLI invocations such as `npx playwright test --headed --project=chromium --workers=1`.
+
+**Table 3.4: Demo Configuration Settings**
+
+| Setting | Value | Purpose |
+|---------|-------|---------|
+| `grep: /@demo/` | Tag filter | Runs only 10 highlight tests |
+| `headless: false` | Headed mode | Browser visible to audience |
+| `slowMo: 1000` | 1 second delay | Slows actions for visibility |
+| `workers: 1` | Sequential | One test at a time |
+| `fullyParallel: false` | No parallel | Predictable demo flow |
+| Browser | Desktop Chrome | Single stable browser |
+
+**Table 3.5: Tests Tagged with `@demo`**
+
+| # | Spec file | Demonstrated scenario |
+|---|-----------|----------------------|
+| 1 | `form-fill.spec.ts` | Multi-field form submission |
+| 2 | `alerts.spec.ts` | JavaScript alert handling |
+| 3 | `popups.spec.ts` | New tab / window capture |
+| 4 | `file-upload.spec.ts` | File upload via `setInputFiles()` |
+| 5 | `file-download.spec.ts` | File download capture |
+| 6 | `drag-drop.spec.ts` | Drag-and-drop interaction |
+| 7 | `dynamic-loading.spec.ts` | Auto-wait for dynamic content |
+| 8 | `network-mocking.spec.ts` | API response mocking |
+| 9 | `iframe.spec.ts` | Nested iframe interaction |
+| 10 | `navigation.spec.ts` | Back, forward, refresh |
+
+Tests are tagged in source code using Playwright's tag syntax:
+
+```typescript
+test('fills multi-field form and submits successfully', { tag: '@demo' }, async ({ page }) => {
+  // ...
+});
+```
+
+To adjust demo speed, modify `slowMo` in `playwright.demo.config.ts`. For interactive step-through, use `npm run demo:ui` instead.
 
 ## 3.5 Project Organization
 
@@ -423,6 +474,7 @@ A well-structured automation project improves maintainability, scalability, and 
 | `tests/visual-regression.spec.ts-snapshots/` | Baseline screenshots for visual comparison |
 | `fixtures/` | Static test data (e.g., `sample-upload.txt` for file upload demo) |
 | `playwright.config.ts` | Central runner, browser projects, reporters, and artifact settings |
+| `playwright.demo.config.ts` | Live demo config — headed, slow-mo, 10 `@demo` tests (`npm run demo`) |
 | `package.json` | Dependencies and npm scripts |
 | `tsconfig.json` | TypeScript compiler options |
 | `README.md` | Quick-start guide and feature map |
@@ -1177,6 +1229,8 @@ The demonstration was carried out using the software and hardware configuration 
 | Browsers | Chromium, Firefox, WebKit (bundled via Playwright) |
 | Mobile Emulation | iPhone 13 device profile |
 | Browser Management | `npx playwright install` (no external drivers) |
+| Demo Command | `npm run demo` / `npm run demo:ui` |
+| Demo Config | `playwright.demo.config.ts` |
 | Demo Websites | demoqa.com, the-internet.herokuapp.com, jsonplaceholder.typicode.com |
 | Project Repository | `playwright-demo/` |
 
@@ -1184,21 +1238,47 @@ The demonstration environment was configured to execute Playwright automation sc
 
 ## 8.3 Recommended Live Demonstration Flow
 
-For academic presentation and viva, the following sequence is recommended (mirroring the project plan):
+For academic presentation and viva, the project provides a **single-command live demo** that runs 10 curated highlight tests with a visible browser and slow-motion execution:
 
-| Step | Action | Command / file |
-|------|--------|----------------|
+```bash
+npm run demo
+```
+
+This invokes `playwright.demo.config.ts`, which filters tests tagged `@demo`, runs them sequentially on Chromium in headed mode with `slowMo: 1000ms` — allowing the audience to observe each browser action clearly without remembering complex CLI flags.
+
+An interactive alternative for step-by-step classroom demos:
+
+```bash
+npm run demo:ui
+```
+
+**Table 8.2: Recommended Demonstration Sequence**
+
+| Step | Action | Command |
+|------|--------|---------|
 | 1 | Codegen quick win | `npx playwright codegen https://demoqa.com/automation-practice-form` |
-| 2 | Form filling | `npx playwright test tests/form-fill.spec.ts --headed --project=chromium` |
-| 3 | Alerts and dialogs | `npx playwright test tests/alerts.spec.ts --headed --project=chromium` |
-| 4 | Popups / new tabs | `npx playwright test tests/popups.spec.ts --headed --project=chromium` |
-| 5 | File upload / download | `tests/file-upload.spec.ts`, `tests/file-download.spec.ts` |
-| 6 | Network mocking | `tests/network-mocking.spec.ts` |
-| 7 | Trace Viewer walkthrough | `npm run test:trace` → `npx playwright show-trace` |
-| 8 | Cross-browser + mobile | `npm test` or `npm run test:mobile` |
-| 9 | HTML report | `npx playwright show-report` |
+| 2 | **Live highlight demo (primary)** | **`npm run demo`** |
+| 3 | Trace Viewer walkthrough | `npm run test:trace -- tests/form-fill.spec.ts` → `npx playwright show-trace` |
+| 4 | Cross-browser validation | `npm test` |
+| 5 | HTML report | `npx playwright show-report` |
+| 6 | Q&A | — |
 
-For step-by-step classroom demos, **`--debug`** or **`npm run test:ui`** is preferred so the audience can see each action execute in the browser.
+**Table 8.3: Tests Executed by `npm run demo`**
+
+| Order | Spec file | Feature demonstrated |
+|-------|-----------|---------------------|
+| 1 | `form-fill.spec.ts` | Multi-field form automation |
+| 2 | `alerts.spec.ts` | JavaScript alert dialog |
+| 3 | `popups.spec.ts` | New tab / popup handling |
+| 4 | `file-upload.spec.ts` | File upload |
+| 5 | `file-download.spec.ts` | File download |
+| 6 | `drag-drop.spec.ts` | Drag and drop |
+| 7 | `dynamic-loading.spec.ts` | Auto-wait / dynamic content |
+| 8 | `network-mocking.spec.ts` | Network API mocking |
+| 9 | `iframe.spec.ts` | iframe interaction |
+| 10 | `navigation.spec.ts` | Browser back / forward / refresh |
+
+For individual spec debugging during viva, **`--debug`** or **`npm run test:ui`** remain available. The full test suite (`npm test`) runs all 29 tests across 4 browser projects for grading and CI validation.
 
 ## 8.4 Use Case Demonstrations
 
@@ -1815,7 +1895,13 @@ Specific enhancements planned or recommended for the `playwright-demo` repositor
 | Accessibility testing | Integrate `@axe-core/playwright` |
 | Docker runner | Containerized execution via `mcr.microsoft.com/playwright` |
 | Screenshot figures | Capture Figures 8.1–8.12 for PDF report submission |
-| `npm run demo` script | Single command for headed viva demonstration |
+
+The following enhancement has been **implemented**:
+
+| Enhancement | Command | Description |
+|-------------|---------|-------------|
+| Live demo script | `npm run demo` | 10 `@demo` tests, headed, slow-mo, sequential — see `playwright.demo.config.ts` |
+| Demo UI mode | `npm run demo:ui` | Same 10 tests in Playwright UI Mode |
 
 ### 11.2.5 Containerization and Kubernetes
 
@@ -2089,6 +2175,25 @@ END
 ```
 
 **Source:** `playwright.config.ts`, `npm run test:trace`
+
+## A.18 Live Presentation Demo (`npm run demo`)
+
+```
+BEGIN
+  LOAD playwright.demo.config.ts
+  FILTER tests tagged @demo (10 highlight scenarios)
+  SET headless = false, slowMo = 1000ms, workers = 1
+  FOR each demo test IN order:
+    LAUNCH visible Chromium browser
+    EXECUTE test with slow motion between actions
+    CLOSE browser
+  REPORT pass/fail summary
+END
+```
+
+**Command:** `npm run demo`  
+**Interactive alternative:** `npm run demo:ui`  
+**Config:** `playwright.demo.config.ts`
 
 ---
 

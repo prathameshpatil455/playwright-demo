@@ -19,7 +19,48 @@ npm install
 npx playwright install
 ```
 
-## Running Tests
+## Live Demo (Recommended for Presentation)
+
+The fastest way to present this project — **10 highlight tests**, visible browser, slow motion, one test at a time:
+
+```bash
+npm run demo
+```
+
+Same 10 tests in Playwright UI Mode (pick and replay interactively):
+
+```bash
+npm run demo:ui
+```
+
+### What `npm run demo` does
+
+| Setting | Value |
+|---------|-------|
+| Tests run | 10 tagged with `@demo` (not all 29) |
+| Browser | Chromium, visible (headed) |
+| Speed | Slow motion (`slowMo: 1000ms` between actions) |
+| Execution | One test at a time (`workers: 1`) |
+| Config file | `playwright.demo.config.ts` |
+
+### The 10 highlight tests
+
+| # | Spec | Scenario |
+|---|------|----------|
+| 1 | `form-fill.spec.ts` | Multi-field form submit |
+| 2 | `alerts.spec.ts` | JavaScript alert handling |
+| 3 | `popups.spec.ts` | New tab capture |
+| 4 | `file-upload.spec.ts` | File upload |
+| 5 | `file-download.spec.ts` | File download |
+| 6 | `drag-drop.spec.ts` | Drag and drop |
+| 7 | `dynamic-loading.spec.ts` | Auto-wait for dynamic content |
+| 8 | `network-mocking.spec.ts` | API response mocking |
+| 9 | `iframe.spec.ts` | Nested iframe interaction |
+| 10 | `navigation.spec.ts` | Back, forward, refresh |
+
+To slow down or speed up the demo, edit `slowMo` in `playwright.demo.config.ts`.
+
+## Running Tests (Full Suite)
 
 ```bash
 # Run all tests across all browser projects (parallel by default)
@@ -33,22 +74,21 @@ npm run test:webkit
 # Run a specific spec
 npx playwright test tests/form-fill.spec.ts
 
-# Run with UI mode (great for live demos)
+# Run with UI mode (all tests)
 npm run test:ui
 
-# Run headed (see the browser)
+# Run headed (all tests, visible browser)
 npm run test:headed
 ```
 
 ## Demo Flow (Recommended)
 
 1. **Codegen quick win** — `npx playwright codegen https://demoqa.com/automation-practice-form`
-2. **Core interactivity** — form filling, alerts, popups
-3. **File upload/download** — `tests/file-upload.spec.ts`, `tests/file-download.spec.ts`
-4. **Network mocking** — `tests/network-mocking.spec.ts`
-5. **Trace Viewer** — `npm run test:trace` then `npx playwright show-trace test-results/.../trace.zip`
-6. **Cross-browser + mobile** — `npm test`
-7. Q&A
+2. **Live highlight reel** — `npm run demo` (10 key scenarios, slow-mo, visible browser)
+3. **Trace Viewer** — `npm run test:trace` then `npx playwright show-trace test-results/.../trace.zip`
+4. **Cross-browser + mobile** — `npm test`
+5. **HTML report** — `npx playwright show-report`
+6. Q&A
 
 ## Reports & Debugging
 
@@ -95,7 +135,8 @@ playwright-demo/
 │   └── javascript-executor.spec.ts # Scroll & slider via evaluate
 ├── fixtures/
 │   └── sample-upload.txt
-├── playwright.config.ts
+├── playwright.config.ts         # Full test suite config
+├── playwright.demo.config.ts    # Live demo config (npm run demo)
 └── README.md
 ```
 
@@ -135,3 +176,4 @@ Configured in `playwright.config.ts`:
 | 19| Link identification          | `links.spec.ts`            |
 | 20| HTML5 color picker           | `color-picker.spec.ts`     |
 | 21| JavaScript executor          | `javascript-executor.spec.ts` |
+| — | **Live demo (10 tests)**     | **`npm run demo`**             |

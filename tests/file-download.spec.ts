@@ -3,7 +3,7 @@ import path from 'path';
 import { test, expect } from '@playwright/test';
 
 test.describe('File Download', () => {
-  test('captures a download and verifies the saved file', async ({ page }) => {
+  test('captures a download and verifies the saved file', { tag: '@demo' }, async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/download');
 
     const downloadPromise = page.waitForEvent('download');

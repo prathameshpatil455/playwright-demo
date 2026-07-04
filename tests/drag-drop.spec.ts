@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Drag and Drop', () => {
-  test('drags an element from one column to another', async ({ page }) => {
+  test('drags an element from one column to another', { tag: '@demo' }, async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/drag_and_drop');
 
     const source = page.locator('#column-a');

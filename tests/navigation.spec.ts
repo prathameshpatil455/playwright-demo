@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Browser Navigation', () => {
-  test('navigates back, forward, and refreshes the page', async ({ page }) => {
+  test('navigates back, forward, and refreshes the page', { tag: '@demo' }, async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com');
 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to the-internet');

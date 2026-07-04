@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Network Interception / Mocking', () => {
-  test('mocks an API response with page.route()', async ({ page }) => {
+  test('mocks an API response with page.route()', { tag: '@demo' }, async ({ page }) => {
     await page.route('https://jsonplaceholder.typicode.com/posts/1', async (route) => {
       await route.fulfill({
         status: 200,

@@ -10,7 +10,7 @@ test.describe('Auto Form Filling', () => {
     await expect(page.getByPlaceholder('First Name')).toBeVisible();
   });
 
-  test('fills multi-field form and submits successfully', async ({ page }) => {
+  test('fills multi-field form and submits successfully', { tag: '@demo' }, async ({ page }) => {
     await page.getByPlaceholder('First Name').fill('John');
     await page.getByPlaceholder('Last Name').fill('Doe');
     await page.getByPlaceholder('name@example.com').fill('john.doe@example.com');

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Handling Popups & New Tabs', () => {
-  test('captures a new tab and asserts content on it', async ({ page }) => {
+  test('captures a new tab and asserts content on it', { tag: '@demo' }, async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/windows');
 
     const popupPromise = page.waitForEvent('popup');

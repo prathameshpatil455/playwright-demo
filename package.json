@@ -10,7 +10,9 @@
     "test:mobile": "playwright test --project=mobile-chrome",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
-    "test:trace": "playwright test --trace on"
+    "test:trace": "playwright test --trace on",
+    "demo": "playwright test --config=playwright.demo.config.ts",
+    "demo:ui": "playwright test --config=playwright.demo.config.ts --ui"
   },
   "keywords": [],
   "author": "",

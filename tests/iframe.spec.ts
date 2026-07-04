@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('iFrame Interaction', () => {
-  test('locates and reads content inside nested iframes', async ({ page }) => {
+  test('locates and reads content inside nested iframes', { tag: '@demo' }, async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/nested_frames');
 
     const leftFrame = page

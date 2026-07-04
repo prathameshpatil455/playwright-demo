@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const BASE_URL = 'https://the-internet.herokuapp.com/javascript_alerts';
 
 test.describe('Handling Alerts & Dialogs', () => {
-  test('accepts a JS alert and reads its message', async ({ page }) => {
+  test('accepts a JS alert and reads its message', { tag: '@demo' }, async ({ page }) => {
     page.on('dialog', async (dialog) => {
       expect(dialog.type()).toBe('alert');
       expect(dialog.message()).toBe('I am a JS Alert');
